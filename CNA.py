@@ -1,3 +1,5 @@
+import xlrd
+
 def mat1(filename):
         f = open(filename, 'r')
         mat = []
@@ -8,8 +10,19 @@ def mat1(filename):
                         mat[i][j] = int(mat[i][j])
         return mat
 
+def mat1_xls(filename):
+	rb = xlrd.open_workbook(filename)
+	sheet = rb.sheet_by_index(0)
+	mat = []
+	for i in range(27):
+    		mat.append([0]*28)
+	for i in range(27):
+    		for j in range(28):
+        		mat[i][j] = sheet.cell_value(i+2, j+2)
+	return mat
+
 def mat2(filename):
-        mat = mat1(filename)
+        mat = mat1_xls(filename)
         tasks_per_machine = [0]*len(mat)
         mat2 = []
         for _ in range(len(mat)):
@@ -59,12 +72,13 @@ def mat3(matriz1,matriz2,tasks_per_machine):
 		return [novaMat,ordemlinhas]
 
 if __name__ == "__main__":
-        filename = "matriz1.txt"	
-        matriz1 = mat1(filename)
+        filename = "matriz1.txt"
+	filename_xls = "Matriz.xls"
+        matriz1 = mat1_xls(filename_xls)
         print 'Matriz A'
         for i in matriz1:
         	print i
-        matriz2,tasks_per_machine = mat2(filename)
+        matriz2,tasks_per_machine = mat2(filename_xls)
         print
         for i in xrange(len(tasks_per_machine)):
         	matriz2[i].append('|')
